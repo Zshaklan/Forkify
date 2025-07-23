@@ -5,6 +5,7 @@ import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
+import icons from 'url:../img/icons.svg';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -120,7 +121,19 @@ async function controlAddRecipe(newRecipe) {
   }
 }
 
+function controlSvgIconBuild() {
+  document.querySelectorAll('use').forEach(useEl => {
+    const href = useEl.getAttribute('href');
+
+    if (href && href.startsWith('src/img/icons.svg')) {
+      const iconId = href.split('#')[1];
+      useEl.setAttribute('href', `${icons}#${iconId}`);
+    }
+  });
+}
+
 function init() {
+  controlSvgIconBuild();
   bookmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);

@@ -140,7 +140,3 @@ class RecipeView extends View {
 }
 
 export default new RecipeView();
-
-/////////////////////////////////////////////
-// API key
-// de8f5cf7-1a26-4ee8-9c2a-52b17906aa08

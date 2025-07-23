@@ -121,7 +121,7 @@ async function controlAddRecipe(newRecipe) {
   }
 }
 
-function controlSvgIconBuild() {
+export function controlSvgIconBuild() {
   document.querySelectorAll('use').forEach(useEl => {
     const href = useEl.getAttribute('href');
 
@@ -133,7 +133,6 @@ function controlSvgIconBuild() {
 }
 
 function init() {
-  controlSvgIconBuild();
   bookmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);

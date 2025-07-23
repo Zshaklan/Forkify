@@ -1,4 +1,5 @@
 import icons from 'url:../../img/icons.svg';
+import { controlSvgIconBuild } from '../controller.js';
 
 export default class View {
   _data;
@@ -13,6 +14,8 @@ export default class View {
 
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
+
+    controlSvgIconBuild();
   }
 
   update(data) {

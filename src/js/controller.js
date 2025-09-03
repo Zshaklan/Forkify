@@ -5,7 +5,6 @@ import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
-import icons from 'url:../img/icons.svg';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -18,16 +17,16 @@ const controlRecipes = async function () {
     if (!id) return;
     recipeView.renderSpinner();
 
-    // Update results view to mark selected search results
+    // Update results view
     resultsView.update(model.getSearchResultsPage());
 
-    // Updating bookmarks view
+    // Update bookmarks view
     bookmarksView.update(model.state.bookmarks);
 
-    // Loading Recipe
+    // Load Recipe
     await model.loadRecipe(id);
 
-    // Rendering Recipe
+    // Render Recipe
     recipeView.render(model.state.recipe);
   } catch (error) {
     console.error(error);
@@ -41,17 +40,13 @@ const controlSearchResults = async function () {
 
     // Get search query
     const query = searchView.getQuery();
-
     if (!query) return;
 
-    // Load search results
+    // Load results
     await model.loadSearchResults(query);
 
-    // Render results
-    // resultsView.render(model.state.search.results);
+    // Render results + pagination
     resultsView.render(model.getSearchResultsPage());
-
-    // Render initial pagination buttons
     paginationView.render(model.state.search);
   } catch (error) {
     console.error(error);
@@ -59,31 +54,20 @@ const controlSearchResults = async function () {
 };
 
 function controlPagination(gotoPage) {
-  // Render New results
   resultsView.render(model.getSearchResultsPage(gotoPage));
-
-  // Render New pagination buttons
   paginationView.render(model.state.search);
 }
 
 function controlServings(newServings) {
-  // Update the servings (in the state)
   model.updateServings(newServings);
-
-  // Update the recipe view
-  // recipeView.render(model.state.recipe);
   recipeView.update(model.state.recipe);
 }
 
 function controlAddBookmark() {
-  // Add or remove bookmark
   if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
 
-  // update the recipe view
   recipeView.update(model.state.recipe);
-
-  // Render bookmarks
   bookmarksView.render(model.state.bookmarks);
 }
 
@@ -93,25 +77,16 @@ function controlBookmarks() {
 
 async function controlAddRecipe(newRecipe) {
   try {
-    // Show loading spinner
     addRecipeView.renderSpinner();
 
-    // Upload the new recipe data
     await model.uploadRecipe(newRecipe);
 
-    // Render recipe
     recipeView.render(model.state.recipe);
-
-    // Success message
     addRecipeView.renderMessage();
-
-    // Render bookmark view
     bookmarksView.render(model.state.bookmarks);
 
-    // Change ID in URL
     window.history.pushState(null, '', `#${model.state.recipe.id}`);
 
-    // Close form window
     setTimeout(() => {
       addRecipeView._toggleWindow();
     }, MODAL_CLOSE_SEC * 1000);
@@ -119,17 +94,6 @@ async function controlAddRecipe(newRecipe) {
     console.error('💥', error);
     addRecipeView.renderError(error.message);
   }
-}
-
-export function controlSvgIconBuild() {
-  document.querySelectorAll('use').forEach(useEl => {
-    const href = useEl.getAttribute('href');
-
-    if (href && href.startsWith('src/img/icons.svg')) {
-      const iconId = href.split('#')[1];
-      useEl.setAttribute('href', `${icons}#${iconId}`);
-    }
-  });
 }
 
 function init() {
